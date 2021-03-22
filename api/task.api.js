@@ -108,6 +108,7 @@ router
             });
         }
     })
+
     //get all tasks
     .get('/', authenticateToken, async (req, res) => {
         try {
@@ -175,6 +176,7 @@ router
             taskCreatedBy,
             taskLength,
             taskCategory,
+            taskDeadline,
         } = req.body;
 
         try {
@@ -251,6 +253,7 @@ router
             taskCreatedBy,
             taskLength,
             taskCategory,
+            taskDeadline,
         });
 
         await task
@@ -308,9 +311,7 @@ router
     .delete('/:task_id', authenticateToken, async (req, res) => {
         const { task_id } = req.params;
         try {
-            const remove = await taskModel.findByIdAndDelete(
-                task_id,
-            );
+            const remove = await taskModel.findByIdAndDelete(task_id);
             if (remove) {
                 return res.status(200).json({
                     message: 'Successfully deleted',

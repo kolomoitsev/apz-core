@@ -145,7 +145,7 @@ router
             animalId: animal_id,
             animalLocationLat,
             animalLocationLng,
-            animalLocationTime: new Date().toLocaleString(),
+            animalLocationTime: new Date().toJSON(),
         });
 
         await animalCoordinates

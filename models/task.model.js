@@ -34,6 +34,10 @@ const Task = new Schema(
             ref: 'TaskCategory',
             required: true,
         },
+        taskDeadline: {
+            type: Date,
+            required: true,
+        },
     },
     {
         timestamps: true,
