@@ -4,7 +4,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const bCrypt = require('bcrypt');
 
-const helpers = require('./../helpers/index');
+const { authenticateToken, updateTokens } = require('./../helpers/index');
 const { secret } = require('./../config').jwt;
 
 const tokenModel = require('./../models/token.model');
@@ -28,9 +28,9 @@ router
         } else {
             const { userEmail, _id } = user;
 
-            helpers
-                .updateTokens(_id)
-                .then((tokens) => res.json({ tokens, userEmail, _id }));
+            updateTokens(_id).then((tokens) =>
+                res.json({ tokens, userEmail, _id }),
+            );
         }
     })
     //refresh tokens
@@ -101,7 +101,7 @@ router
             );
     })
     //get all users
-    .get('/', helpers.authenticateToken, async (req, res) => {
+    .get('/', authenticateToken, async (req, res) => {
         try {
             const users = await userModel.find({});
 
@@ -120,7 +120,7 @@ router
         }
     })
     //get user by id
-    .get('/:user_id', helpers.authenticateToken, async (req, res) => {
+    .get('/:user_id', authenticateToken, async (req, res) => {
         const { user_id } = req.params;
         try {
             const user = await userModel.findById(user_id);
@@ -137,7 +137,7 @@ router
         }
     })
     //edit user
-    .patch('/:user_id', helpers.authenticateToken, async (req, res) => {
+    .patch('/:user_id', authenticateToken, async (req, res) => {
         const { user_id } = req.params;
         const {
             userName,
@@ -173,7 +173,7 @@ router
         }
     })
     //delete user
-    .delete('/:user_id', helpers.authenticateToken, async (req, res) => {
+    .delete('/:user_id', authenticateToken, async (req, res) => {
         const { user_id } = req.params;
         try {
             const remove = await userModel.findByIdAndDelete(user_id);

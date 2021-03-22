@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const reservationModel = require('./../models/reservation.model');
-const helpers = require('./../helpers/index');
+const { authenticateToken } = require('./../helpers/index');
 
 router
     //get all reservations
@@ -43,7 +43,7 @@ router
             );
     })
     //get exact reservation
-    .get('/:reservation_id', helpers.authenticateToken, async (req, res) => {
+    .get('/:reservation_id', authenticateToken, async (req, res) => {
         const { reservation_id } = req.params;
         try {
             const reservation = await reservationModel.findById(reservation_id);
@@ -60,7 +60,7 @@ router
         }
     })
     //edit exact reservation
-    .patch('/:reservation_id', helpers.authenticateToken, async (req, res) => {
+    .patch('/:reservation_id', authenticateToken, async (req, res) => {
         const { reservation_id } = req.params;
         const { reservationName } = req.body;
         try {
@@ -83,7 +83,7 @@ router
         }
     })
     //delete exact reservation
-    .delete('/:reservation_id', helpers.authenticateToken, async (req, res) => {
+    .delete('/:reservation_id', authenticateToken, async (req, res) => {
         const { reservation_id } = req.params;
         try {
             const remove = await reservationModel.findByIdAndDelete(

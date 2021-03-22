@@ -8,10 +8,14 @@ const Animal = new Schema(
             ref: 'Reservation',
             required: true,
         },
-        animalName: String,
+        animalName: {
+            type: String,
+            unique: true,
+        },
         animalRfdi: {
             type: String,
             required: true,
+            unique: true,
         },
         animalStatus: {
             type: String,

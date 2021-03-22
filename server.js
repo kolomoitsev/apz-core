@@ -8,6 +8,8 @@ const config = require('./config');
 
 const userApi = require('./api/user.api');
 const reservationApi = require('./api/reservation.api');
+const animalApi = require('./api/animal.api');
+const taskApi = require('./api/task.api');
 
 const MONGODB_LINK = config.MONGOOSE_LINK;
 
@@ -36,6 +38,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/user', userApi);
 app.use('/reservation', reservationApi);
+app.use('/animal', animalApi);
+app.use('/task', taskApi);
 
 const PORT = process.env.PORT || 3000;
 
