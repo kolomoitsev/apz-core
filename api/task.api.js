@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
+const moment = require('moment');
 const userModel = require('./../models/user.model');
 const taskModel = require('./../models/task.model');
 const taskCategoryModel = require('./../models/task-category.model');
@@ -108,7 +109,6 @@ router
             });
         }
     })
-
     //get all tasks
     .get('/', authenticateToken, async (req, res) => {
         try {
@@ -324,6 +324,111 @@ router
         } catch (e) {
             return res.status(500).json({
                 error: 'Error with deleting exact task',
+            });
+        }
+    })
+    //stats of user for 1 day
+    .get('/stats/day/:user_id', authenticateToken, async (req, res) => {
+        const { user_id } = req.params;
+        try {
+            const tasks = await taskModel.find({
+                taskAssignee: user_id,
+            });
+
+            if (tasks.length) {
+                const dayBefore = moment().subtract(1, 'days');
+
+                let tasksTotal = 0,
+                    timeTotal = 0;
+
+                for (const task of tasks) {
+                    const { taskLength, createdAt } = task;
+                    if (moment(createdAt).isAfter(dayBefore)) {
+                        tasksTotal += 1;
+                        timeTotal += taskLength;
+                    }
+                }
+
+                return res.status(200).json({ tasksTotal, timeTotal });
+            } else {
+                return res.status(404).json({
+                    error: 'Not found',
+                });
+            }
+        } catch (e) {
+            return res.status(500).json({
+                error: 'Error with finding tasks',
+                e,
+            });
+        }
+    })
+    //stats of user for 7 days
+    .get('/stats/week/:user_id', authenticateToken, async (req, res) => {
+        const { user_id } = req.params;
+        try {
+            const tasks = await taskModel.find({
+                taskAssignee: user_id,
+            });
+
+            if (tasks.length) {
+                const dayBefore = moment().subtract(7, 'days');
+
+                let tasksTotal = 0,
+                    timeTotal = 0;
+
+                for (const task of tasks) {
+                    const { taskLength, createdAt } = task;
+                    if (moment(createdAt).isAfter(dayBefore)) {
+                        tasksTotal += 1;
+                        timeTotal += taskLength;
+                    }
+                }
+
+                return res.status(200).json({ tasksTotal, timeTotal });
+            } else {
+                return res.status(404).json({
+                    error: 'Not found',
+                });
+            }
+        } catch (e) {
+            return res.status(500).json({
+                error: 'Error with finding tasks',
+                e,
+            });
+        }
+    })
+    //stats of user for 30 days
+    .get('/stats/month/:user_id', authenticateToken, async (req, res) => {
+        const { user_id } = req.params;
+        try {
+            const tasks = await taskModel.find({
+                taskAssignee: user_id,
+            });
+
+            if (tasks.length) {
+                const dayBefore = moment().subtract(30, 'days');
+
+                let tasksTotal = 0,
+                    timeTotal = 0;
+
+                for (const task of tasks) {
+                    const { taskLength, createdAt } = task;
+                    if (moment(createdAt).isAfter(dayBefore)) {
+                        tasksTotal += 1;
+                        timeTotal += taskLength;
+                    }
+                }
+
+                return res.status(200).json({ tasksTotal, timeTotal });
+            } else {
+                return res.status(404).json({
+                    error: 'Not found',
+                });
+            }
+        } catch (e) {
+            return res.status(500).json({
+                error: 'Error with finding tasks',
+                e,
             });
         }
     });
