@@ -115,7 +115,7 @@ router
             const tasks = await taskModel.find({});
 
             if (tasks.length) {
-                return res.status(200).json(categories);
+                return res.status(200).json(tasks);
             } else {
                 return res.status(404).json({
                     error: 'Not found',

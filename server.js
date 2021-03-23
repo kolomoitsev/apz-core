@@ -11,6 +11,8 @@ const reservationApi = require('./api/reservation.api');
 const animalApi = require('./api/animal.api');
 const taskApi = require('./api/task.api');
 
+require('./cron-tasks/task.cron');
+
 const MONGODB_LINK = config.MONGOOSE_LINK;
 
 mongoose.connect(MONGODB_LINK, {
