@@ -129,7 +129,7 @@ router
         }
     })
     //get exact task
-    .get('/:task_id', authenticateToken, async (req, res) => {
+    .get('/exact/:task_id', authenticateToken, async (req, res) => {
         const { task_id } = req.params;
         try {
             const task = await taskCategoryModel.findById(task_id);
@@ -146,7 +146,7 @@ router
         }
     })
     //get all tasks by exact user assigned
-    .get('/:user_id', authenticateToken, async (req, res) => {
+    .get('/assigned/:user_id', authenticateToken, async (req, res) => {
         const { user_id } = req.params;
         try {
             const tasks = await taskModel.find({
@@ -167,8 +167,30 @@ router
             });
         }
     })
+    //get all tasks by exact user created by
+    .get('/created/:user_id', authenticateToken, async (req, res) => {
+        const { user_id } = req.params;
+        try {
+            const tasks = await taskModel.find({
+                taskCreatedBy: user_id,
+            });
+
+            if (tasks.length) {
+                return res.status(200).json(tasks);
+            } else {
+                return res.status(404).json({
+                    error: 'Not found',
+                });
+            }
+        } catch (e) {
+            return res.status(500).json({
+                error: 'Error with finding tasks',
+                e,
+            });
+        }
+    })
     //create new task
-    .post('/', authenticateToken, async (req, res) => {
+    .post('/task', authenticateToken, async (req, res) => {
         const {
             taskName,
             taskDescription,
@@ -431,6 +453,42 @@ router
                 e,
             });
         }
-    });
+    })
+
+    //stats of admin for 30 days
+    .get('/stats/admin/:user_id', authenticateToken, async (req, res) => {
+        const { user_id } = req.params;
+        try {
+            const tasks = await taskModel.find({
+                taskCreatedBy: user_id,
+            });
+
+            if (tasks.length) {
+                const dayBefore = moment().subtract(30, 'days');
+
+                let tasksTotal = 0,
+                    timeTotal = 0;
+
+                for (const task of tasks) {
+                    const { taskLength, createdAt } = task;
+                    if (moment(createdAt).isAfter(dayBefore)) {
+                        tasksTotal += 1;
+                        timeTotal += taskLength;
+                    }
+                }
+
+                return res.status(200).json({ tasksTotal, timeTotal });
+            } else {
+                return res.status(404).json({
+                    error: 'Not found',
+                });
+            }
+        } catch (e) {
+            return res.status(500).json({
+                error: 'Error with finding tasks',
+                e,
+            });
+        }
+});
 
 module.exports = router;

@@ -59,7 +59,7 @@ router
                 if (token === null) {
                     throw new Error('Invalid token');
                 }
-                return helpers.updateTokens(token.userId);
+                return updateTokens(token.userId);
             })
             .then((tokens) => res.json(tokens))
             .catch((err) => res.status(400).json({ message: err.message }));

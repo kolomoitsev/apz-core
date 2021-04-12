@@ -1,5 +1,5 @@
 const config = {
-    PORT: 3000,
+    PORT: 3001,
     MONGOOSE_LINK:
         'mongodb+srv://kolomoitsev:HVZD4EdjqXNV6ihQ@cluster0.hnn0k.mongodb.net/sigma',
     jwt: {
@@ -11,7 +11,7 @@ const config = {
             },
             refresh: {
                 type: 'refresh',
-                expiresIn: '3m',
+                expiresIn: '5m',
             },
         },
     },
