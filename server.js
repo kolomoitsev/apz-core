@@ -11,7 +11,8 @@ const reservationApi = require('./api/reservation.api');
 const animalApi = require('./api/animal.api');
 const taskApi = require('./api/task.api');
 
-const cronJob = require('./cron-tasks/task.cron');
+
+
 
 const MONGODB_LINK = config.MONGOOSE_LINK;
 
@@ -32,6 +33,10 @@ connection
 
 const app = express();
 
+//const cronJob = require('./cron-tasks/task.cron');
+const backupsJob = require('./cron-tasks/backup.cron');
+backupsJob();
+
 app.use(cors());
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -45,6 +50,6 @@ app.use('/task', taskApi);
 
 const PORT = process.env.PORT || 3001;
 
-cronJob();
+//cronJob();
 
 server = app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

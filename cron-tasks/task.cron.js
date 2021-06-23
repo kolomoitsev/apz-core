@@ -4,7 +4,7 @@ const userModel = require('./../models/user.model');
 const moment = require('moment');
 
 const cronJob = () => {
-    return cron.schedule('*/45 * * * * *', async () => {
+    return cron.schedule('0 */15 * * * *', async () => {
 
         try {
             const tasks = await taskModel.find({
@@ -23,7 +23,7 @@ const cronJob = () => {
 
                             if (user) {
                                 console.group(user.userEmail);
-                                return console.log(
+                                console.log(
                                     `Less than 15 minutes on task ${taskName}`,
                                 );
                                 console.groupEnd();
@@ -39,10 +39,10 @@ const cronJob = () => {
                     }
                 }
             } else {
-                return console.log('no tasks found');
+                console.log('no tasks found');
             }
         } catch (e) {
-            return console.log({
+            console.log({
                 error: 'Error with finding tasks',
                 e,
             });

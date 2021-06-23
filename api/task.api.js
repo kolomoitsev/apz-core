@@ -132,15 +132,35 @@ router
     .get('/exact/:task_id', authenticateToken, async (req, res) => {
         const { task_id } = req.params;
         try {
-            const task = await taskCategoryModel.findById(task_id);
+            const task = await taskModel.findById(task_id);
             if (task) {
-                return res.status(200).json(task);
+
+                const { taskCreatedBy, taskCategory } = task;
+
+                try{
+
+                    const creator = await userModel.findById(taskCreatedBy);
+
+                    const category = await taskCategoryModel.findById(taskCategory);
+
+                    return res.status(200).json({
+                        task,
+                        creator,
+                        category
+                    });
+
+                } catch (e){
+                    console.log(e.message);
+                    return res.status(400).json({
+                        error: 'Bad request',
+                    });
+                }
             } else
                 return res.status(404).json({
                     error: 'Not found',
                 });
         } catch (e) {
-            return res.status(500).json({
+            return res.status(400).json({
                 error: 'Error with finding exact task',
             });
         }
@@ -202,10 +222,12 @@ router
         } = req.body;
 
         try {
+
             const assigneeUser = await userModel.findById(taskAssignee);
 
             if (assigneeUser) {
                 const { userRole } = assigneeUser;
+                console.log(assigneeUser)
                 if (userRole !== 'worker') {
                     return res.status(403).json({
                         error: 'Assignee role is not an worker',
@@ -217,6 +239,7 @@ router
                 });
             }
         } catch (e) {
+            console.log(e)
             return res.status(500).json({
                 error: 'Error with finding assignee user',
             });
@@ -227,6 +250,7 @@ router
 
             if (creatorUser) {
                 const { userRole } = creatorUser;
+                console.log(userRole);
                 if (userRole !== 'owner') {
                     return res.status(403).json({
                         error: 'Creator role is not an owner',
@@ -250,10 +274,10 @@ router
 
             let tasksTime = 0;
 
-            if (tasks.length) {
+            if (tasks) {
                 for (const task of tasks) {
                     const { taskLength } = task;
-                    tasksTime += taskLength;
+                    tasksTime += Number(taskLength*1);
                 }
                 if (tasksTime + taskLength > 480) {
                     return res.status(403).json({
@@ -454,7 +478,6 @@ router
             });
         }
     })
-
     //stats of admin for 30 days
     .get('/stats/admin/:user_id', authenticateToken, async (req, res) => {
         const { user_id } = req.params;

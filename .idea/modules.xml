@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/apz-core.iml" filepath="$PROJECT_DIR$/.idea/apz-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../apz-iot/.idea/apz-iot.iml" filepath="$PROJECT_DIR$/../apz-iot/.idea/apz-iot.iml" />
     </modules>
   </component>
 </project>

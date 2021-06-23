@@ -7,11 +7,11 @@ const config = {
         tokens: {
             access: {
                 type: 'access',
-                expiresIn: '2m',
+                expiresIn: '10d',
             },
             refresh: {
                 type: 'refresh',
-                expiresIn: '5m',
+                expiresIn: '50d',
             },
         },
     },
